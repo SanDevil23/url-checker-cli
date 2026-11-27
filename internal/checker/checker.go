@@ -9,7 +9,6 @@ import (
 	"io"
 	"net"
 	"net/http"
-	"syscall"
 	"time"
 )
 
@@ -126,7 +125,7 @@ func classify(err error) ErrKind {
 		errors.As(err, &hostErr),
 		errors.As(err, &tlsRecord):
 		return KindTLS
-	case errors.Is(err, syscall.ECONNREFUSED):
+	case connRefused(err):
 		return KindRefused
 	case errors.Is(err, context.DeadlineExceeded),
 		errors.As(err, &netErr) && netErr.Timeout():
